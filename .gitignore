@@ -1,0 +1,16 @@
+# Ignorar fitxers del sistema macOS
+.DS_Store
+
+# Ignorar fitxers de desenvolupament personals
+desenvolupament.php
+
+# Ignorar dades de Docker
+db_data/
+*.log
+*.pid
+
+# Ignorar fitxers temporals o de l'entorn
+.env
+
+# Ignorar fitxers de l'editor (Visual Studio Code)
+.vscode/
