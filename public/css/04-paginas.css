@@ -179,6 +179,14 @@
   }
 }
 
+/* =========================
+   PUBLICACIÓ
+   Estilos específicos para la página de publicació
+   ========================= */
+/* Avatar rodó al centre */
+.publicacio__like {
+  justify-self: right;              /* es col·loca a la dreta dins la columna 2 */
+}
 
 /* =========================
    RECORDATORIO
