@@ -19,11 +19,11 @@
 
 /* Contenedor de las cards en Home */
 .inicio-destacados__rejilla {
-    /* Ancho visual alineado con el resto (95% hasta 1400px) */
-    width: 95%;
-    max-width: 1400px;
-    margin: 0 auto;
-    /* centrado */
+  /* Ancho visual alineado con el resto (95% hasta 1400px) */
+  width: 95%;
+  max-width: 1400px;
+  margin: 0 auto;
+  /* centrado */
 }
 
 /* (Ejemplo opcional)
@@ -39,71 +39,71 @@
    ========================= */
 
 .login {
-    /* un poco más de aire vertical que una sección normal */
-    padding: 40px 0;
+  /* un poco más de aire vertical que una sección normal */
+  padding: 40px 0;
 }
 
 .login__titulo {
-    text-align: center;
-    margin-bottom: 16px;
+  text-align: center;
+  margin-bottom: 16px;
 }
 
 .login__card {
-    /* caja centrada tipo tarjeta */
-    width: 100%;
-    max-width: 520px;
-    margin: 0 auto;
-    background: #fff;
-    border: 1px solid var(--color-linea);
-    border-radius: var(--radio);
-    box-shadow: var(--sombra);
-    padding: 20px;
+  /* caja centrada tipo tarjeta */
+  width: 100%;
+  max-width: 520px;
+  margin: 0 auto;
+  background: #fff;
+  border: 1px solid var(--color-linea);
+  border-radius: var(--radio);
+  box-shadow: var(--sombra);
+  padding: 20px;
 }
 
 .login__form {
-    display: grid;
-    gap: 16px;
+  display: grid;
+  gap: 16px;
 }
 
 .login__grupo {
-    display: grid;
-    gap: 6px;
+  display: grid;
+  gap: 6px;
 }
 
 .login__label {
-    color: var(--color-texto-suave);
-    font-size: 0.95rem;
+  color: var(--color-texto-suave);
+  font-size: 0.95rem;
 }
 
 .login__input {
-    padding: 10px 12px;
-    border: 1.5px solid var(--color-linea);
-    border-radius: 8px;
-    background: #fff;
-    color: var(--color-texto);
-    outline: none;
+  padding: 10px 12px;
+  border: 1.5px solid var(--color-linea);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--color-texto);
+  outline: none;
 }
 
 .login__input:focus {
-    border-color: var(--color-marca);
-    box-shadow: 0 0 0 3px rgba(110, 75, 58, .15);
-    /* halo con color de marca */
+  border-color: var(--color-marca);
+  box-shadow: 0 0 0 3px rgba(110, 75, 58, .15);
+  /* halo con color de marca */
 }
 
 .login__acciones {
-    display: flex;
-    gap: 10px;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 8px;
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
 }
 
 /* En pantallas pequeñas, apilar botones */
 @media (max-width: 480px) {
-    .login__acciones {
-        flex-direction: column;
-        align-items: stretch;
-    }
+  .login__acciones {
+    flex-direction: column;
+    align-items: stretch;
+  }
 }
 
 /* =========================
@@ -112,27 +112,27 @@
    ========================= */
 /* Contenidor lateral: columna vertical */
 .perfil__lateral {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    align-items: stretch;
-    /* opcional */
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: stretch;
+  /* opcional */
 }
 
 /* El grup de dalt no necessita res especial */
 .perfil__lateral_superior {
-    display: grid;
-    /* o block; com prefereixis */
-    gap: 12px;
+  display: grid;
+  /* o block; com prefereixis */
+  gap: 12px;
 }
 
 /* Aquest és el truc: baixa aquest bloc fins al fons */
 .perfil__lateral_inferior {
-    margin-top: auto;
-    /* empeny cap avall */
-    display: grid;
-    /* opcional, per tenir gap si afegeixes més coses */
-    gap: 12px;
+  margin-top: auto;
+  /* empeny cap avall */
+  display: grid;
+  /* opcional, per tenir gap si afegeixes més coses */
+  gap: 12px;
 }
 
 /* ===== PERFIL — Banner ===== */
@@ -156,19 +156,24 @@
 
 /* Avatar rodó al centre */
 .perfil__avatar {
-  justify-self: center;              /* es col·loca al centre dins la columna 2 */
+  justify-self: center;
+  /* es col·loca al centre dins la columna 2 */
   width: 220px;
-  aspect-ratio: 1/1;              /* quadrat sempre */
-  border-radius: 50%;             /* cercle */
-  overflow: hidden;               /* retalla en cercle */
+  aspect-ratio: 1/1;
+  /* quadrat sempre */
+  border-radius: 50%;
+  /* cercle */
+  overflow: hidden;
+  /* retalla en cercle */
   border: 3px solid #fff;
-  box-shadow: 0 4px 12px rgba(0,0,0,.12);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, .12);
 }
 
 .perfil__avatar img {
   width: 100%;
   height: 100%;
-  object-fit: cover;              /* retallat sense deformar */
+  object-fit: cover;
+  /* retallat sense deformar */
 }
 
 /* Responsive: quan s’apila, centrem l’avatar a sota */
@@ -184,9 +189,120 @@
    Estilos específicos para la página de publicació
    ========================= */
 /* Avatar rodó al centre */
-.publicacio__like {
-  justify-self: right;              /* es col·loca a la dreta dins la columna 2 */
+.publicacion__like {
+  justify-self: right;
+  /* es col·loca a la dreta dins la columna 2 */
+  /* quadrat sempre */
 }
+
+.publicacion__autor {
+  color: var(--color-texto-suave);
+  font-size: 1rem;
+  margin: 8px 0 0 0;
+}
+
+.publicacion__imagen {
+  width: 80%;
+  object-fit: cover;
+  margin: 0 auto;
+  aspect-ratio: 4/2;
+  border-radius: 10px;
+}
+
+/* =========================
+   COMENTARIS — estil visual
+   ========================= */
+.comentaris {
+  background: #fff;
+  border: 1px solid var(--color-linea);
+  border-radius: var(--radio);
+  box-shadow: var(--sombra);
+  padding: 20px;
+  width: 100%;
+  max-width: 700px;
+  margin: 32px auto;
+}
+
+.comentaris h2 {
+  color: var(--color-titulo);
+  margin-bottom: 1rem;
+}
+
+.comentaris form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.comentaris label {
+  font-weight: 500;
+  color: var(--color-texto-suave);
+}
+
+.comentaris textarea {
+  resize: vertical;
+  padding: 10px 12px;
+  border: 1.5px solid var(--color-linea);
+  border-radius: 8px;
+  min-height: 60px;
+  font-family: inherit;
+  color: var(--color-texto);
+  background: #fafafa;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.comentaris textarea:focus {
+  border-color: var(--color-marca);
+  box-shadow: 0 0 0 3px rgba(110, 75, 58, .15);
+  outline: none;
+}
+
+.comentaris button {
+  align-self: flex-end;
+  background: var(--color-marca);
+  color: var(--color-marca-tinta);
+  border: none;
+  padding: 8px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: filter .2s;
+}
+
+.comentaris button:hover {
+  filter: brightness(0.95);
+}
+
+/* Si vols afegir la llista de comentaris */
+.llista-comentaris {
+  margin-top: 20px;
+  display: grid;
+  gap: 14px;
+}
+
+.comentari {
+  background: var(--color-fondo);
+  border: 1px solid var(--color-linea);
+  border-radius: var(--radio);
+  padding: 12px 16px;
+}
+
+.comentari__autor {
+  font-weight: 600;
+  color: var(--color-titulo);
+}
+
+.comentari__data {
+  font-size: 0.85rem;
+  color: var(--color-texto-suave);
+  margin-left: 8px;
+}
+
+.comentari__text {
+  margin-top: 6px;
+  color: var(--color-texto);
+}
+
 
 /* =========================
    RECORDATORIO
