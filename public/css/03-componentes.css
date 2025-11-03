@@ -1,0 +1,371 @@
+/* =========================
+   03-COMPONENTES
+   Qué incluye este archivo:
+   - Portada (banner)
+   - Barra (buscador + login)
+   - Botones
+   - Tarjeta (publicación)
+   - Botón corazón
+   - Pie (footer)
+   - Ajustes responsive
+   Consejo: lee los títulos de bloque y las notas de uso.
+   ========================= */
+
+
+/* ======================================
+   PORTADA (BANNER)
+   - Contiene una imagen panorámica y el título principal.
+   - Usa el mismo ancho que el resto de la web (90%, máx 1200px).
+   ====================================== */
+
+.portada {
+    /* Fondo suave y texto centrado para el bloque completo */
+    background: var(--color-fondo);
+    padding: 0 0 20px;
+    text-align: center;
+}
+
+.portada__grande {
+    /* --- Layout --- */
+    height: 370px;
+    /* alto fijo del rectángulo del banner */
+    width: 100%;
+    /* ancho fluido: 90% del viewport */
+    /* no crece más de 1200px */
+    margin: 0 auto;
+    /* centra el rectángulo */
+
+    /* --- Caja --- */
+    overflow: hidden;
+    /* recorta la imagen si sobresale */
+    /* esquinas redondeadas coherentes */
+    box-shadow: 0 8px 24px rgba(0, 0, 0, .06);
+    /* sombra suave */
+}
+
+.portada__imagen {
+    /* La imagen rellena el contenedor sin deformarse */
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.portada__titulo {
+    /* Título con estilo de marca */
+    margin: 16px 0 8px;
+    color: var(--color-titulo);
+    letter-spacing: 0.4em;
+    /* separa un poco las letras */
+    font-size: 2.5rem;
+    text-transform: uppercase;
+}
+
+
+/* ======================================
+   BARRA (BUSCADOR + LOGIN)
+   - Banda a todo el ancho con contenido centrado.
+   - A la izquierda: input + botón Buscar.
+   - A la derecha: botón Iniciar sesión.
+   ====================================== */
+
+.barra {
+    width: 100%;
+    /* ocupa todo el ancho */
+    background: var(--color-marca);
+    /* fondo marrón */
+    color: var(--color-marca-tinta);
+    /* texto claro */
+    border-top: 1px solid var(--color-marca-tinta);
+    border-bottom: 1px solid var(--color-marca-tinta);
+}
+
+.barra__contenido {
+    /* --- Layout de fila: izquierda/derecha --- */
+    display: flex;
+    align-items: center;
+    /* centra verticalmente */
+    justify-content: space-between;
+    /* separa extremos */
+    gap: 12px;
+    /* hueco entre grupos */
+    padding: 12px 0;
+    /* aire arriba/abajo */
+}
+
+.barra .contenedor {
+    /* Mantiene mismo ancho visual que la portada */
+    width: 90%;
+    max-width: 1200px;
+}
+
+.barra__grupo {
+    /* Grupo del buscador: input + botón */
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.entrada {
+    /* Campo de búsqueda sobre fondo oscuro */
+    min-width: 240px;
+    /* evita que quede demasiado pequeño */
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1.5px solid var(--color-marca-tinta);
+    background: transparent;
+    color: var(--color-marca-tinta);
+}
+
+.entrada::placeholder {
+    color: rgba(248, 246, 242, .85);
+    /* placeholder legible en oscuro */
+}
+
+.boton {
+    /* Botón genérico (buscar, iniciar sesión, etc.) */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    text-decoration: none;
+
+    border: 1.5px solid var(--color-marca-tinta);
+    background: transparent;
+    /* por defecto: transparente */
+    color: var(--color-marca-tinta);
+}
+
+.boton:hover {
+    filter: brightness(.95);
+}
+
+.boton--marca {
+    /* Variante sólida con color de marca */
+    background: var(--color-marca);
+    color: var(--color-marca-tinta);
+    border-color: var(--color-marca);
+}
+
+.boton--contraste {
+    background: var(--color-marca-tinta);
+    color: var(--color-marca);
+    border-color: var(--color-marca);
+}
+
+.tabla {
+  width: 100%;
+}
+
+.tabla td {
+  padding: 12px;
+  border-bottom: 1px solid var(--color-linea);
+}
+
+.tabla__derecha {
+  text-align: right;
+}
+
+.login__select {
+  width: 100%;
+  appearance: none;               /* amaga la fletxa nativa */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding: 0.9rem 3rem 0.9rem 1rem;
+  border: 1.5px solid #d9d9e3;
+  border-radius: 12px;
+  background: #fff;
+  font-size: 0.95rem;
+  line-height: 1.2;
+  transition: border-color .2s, box-shadow .2s, background-color .2s;
+  box-shadow: 0 1px 2px rgba(0,0,0,.04);
+}
+
+
+/* ======================================
+   TARJETA (PUBLICACIÓN)
+   - Mismo patrón para lista de publicaciones o destacados.
+   - Estructura: imagen → encabezado (título + botón) → texto → CTA.
+   ====================================== */
+
+.tarjeta {
+    /* --- Layout --- */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    /* rellena la celda de la rejilla */
+    padding: 12px 0 14px;
+
+    /* --- Caja --- */
+    background: #fff;
+    border: 1px solid var(--color-linea);
+    border-radius: var(--radio);
+    box-shadow: var(--sombra);
+}
+
+.tarjeta__encabezado {
+    /* Fila: título a la izquierda, botón a la derecha */
+    width: 95%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin: 10px 0 6px;
+}
+
+.tarjeta__imagen {
+    /* Imagen consistente dentro de la tarjeta */
+    width: 95%;
+    aspect-ratio: 4/3;
+    /* cambia a 1/1 si prefieres cuadrada */
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.tarjeta__titulo {
+    width: 95%;
+    margin: 10px 0 6px;
+    color: var(--color-titulo);
+    text-align: center;
+}
+
+.tarjeta__texto {
+    width: 95%;
+    margin: 0 0 10px;
+    color: #000;
+    /* texto de cuerpo en negro */
+}
+
+.tarjeta__cta {
+    /* Botón de llamada a la acción al ancho de la tarjeta */
+    display: block;
+    width: 95%;
+    text-align: center;
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: var(--color-marca);
+    color: var(--color-marca-tinta);
+    text-decoration: none;
+    border: 1.5px solid var(--color-marca);
+}
+
+.tarjeta__cta:hover {
+    filter: brightness(.95);
+}
+
+
+/* ======================================
+   BOTÓN CIRCULAR CON CORAZÓN
+   - Pensado para “favoritos”.
+   - Úsalo dentro de .tarjeta__encabezado.
+   ====================================== */
+
+.boton-corazon {
+    /* --- Layout --- */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+
+    /* --- Caja --- */
+    border-radius: 50%;
+    border: 1.5px solid var(--color-marca);
+    background: var(--color-marca);
+
+    /* --- Color/Text --- */
+    color: var(--color-marca-tinta);
+    /* corazón blanco */
+    font-size: 16px;
+    line-height: 1;
+
+    /* --- Otros --- */
+    cursor: pointer;
+    outline: none;
+    /* quitamos el outline por defecto */
+}
+
+.boton-corazon:hover {
+    filter: brightness(.95);
+}
+
+.boton-corazon:focus {
+    box-shadow: 0 0 0 3px rgba(110, 75, 58, .25);
+}
+
+/* halo visible teclado */
+.boton-corazon:active {
+    transform: translateY(1px);
+}
+
+/* micro-feedback */
+
+/* Truco rápido:
+   - ♥ → corazón sólido (blanco).
+   - ♡ → corazón contorno (transparente).
+*/
+
+
+/* ======================================
+   PIE (FOOTER)
+   - Banda inferior a todo ancho.
+   - Enlaces de privacidad/contacto a la derecha.
+   ====================================== */
+
+.pie {
+    width: 100%;
+    background: var(--color-pie);
+    /* marrón muy oscuro, casi negro */
+    color: #fff;
+    border-top: 1px solid rgba(248, 246, 242, .15);
+}
+
+.pie__contenido {
+    /* Fila: texto a la izquierda, enlaces a la derecha */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 0;
+    font-size: .9rem;
+}
+
+.pie .contenedor {
+    /* Igual ancho visual que portada y barra */
+    width: 90%;
+    max-width: 1200px;
+}
+
+.pie__enlaces {
+    display: flex;
+    gap: 16px;
+}
+
+.pie__enlaces a {
+    color: #fff;
+    text-decoration: none;
+    opacity: .9;
+}
+
+.pie__enlaces a:hover {
+    opacity: 1;
+    text-decoration: underline;
+}
+
+
+/* ======================================
+   RESPONSIVE (BARRA Y PIE)
+   - En pantallas pequeñas apilamos verticalmente.
+   ====================================== */
+
+@media (max-width: 560px) {
+
+    .barra__contenido,
+    .pie__contenido {
+        flex-direction: column;
+        align-items: center;
+    }
+}

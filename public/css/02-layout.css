@@ -1,0 +1,137 @@
+/* =========================
+   02-LAYOUT — ESTRUCTURA Y REJILLAS
+   Este archivo define:
+   1) El “esqueleto” de las secciones (separación vertical, fondos de sección, color de títulos).
+   2) Rejillas (grids) reutilizables para organizar columnas.
+   3) Comportamiento responsive básico (apilar en pantallas estrechas).
+   ========================= */
+
+
+/* ======================================
+   SECCIONES
+   - .seccion         → bloque vertical con aire arriba/abajo (espacio)
+   - .seccion--suave  → variante con fondo claro (beige del sitio)
+   - .seccion__titulo → color correcto para títulos de sección
+   USO RECOMENDADO:
+   <section class="seccion seccion--suave">
+     <div class="contenedor">
+       <h2 class="seccion__titulo">Título</h2>
+       ...contenido...
+     </div>
+   </section>
+   ====================================== */
+
+.seccion {
+  /* Separación vertical para que las secciones “respiren” */
+  padding: 24px 0;
+}
+
+.seccion--suave {
+  /* Fondo suave (beige) que diferencia visualmente esta sección del resto */
+  background: var(--color-fondo);
+}
+
+.seccion__titulo {
+  /* Color de título coherente con el diseño del sitio */
+  color: var(--color-titulo);
+}
+
+
+/* ======================================
+   REJILLAS (GRIDS) REUTILIZABLES
+   - .rejilla-1 → una sola columna (listas verticales, bloques apilados)
+   - .rejilla-3 → tres columnas iguales (ideal para 3 tarjetas/cards)
+   CONSEJO:
+   - Usa las rejillas para el “layout”, no para decorar.
+   - Dentro de cada celda pon tus componentes (tarjetas, etc.).
+   ====================================== */
+
+.rejilla-1 {
+  /* Activamos Grid */
+  display: grid;
+
+  /* Una única columna que ocupa todo el ancho disponible */
+  grid-template-columns: 1fr;
+
+  /* Separación entre elementos de la rejilla */
+  gap: 16px;
+}
+
+.rejilla-2 {
+  /* Activamos Grid */
+  display: grid;
+
+  /* Dos columnas iguales de ancho */
+  grid-template-columns: 1fr 1fr;
+
+  /* Separación entre elementos de la rejilla */
+  gap: 16px;
+}
+
+.rejilla-3 {
+  display: grid;
+
+  /* Tres columnas iguales de ancho */
+  grid-template-columns: 1fr 1fr 1fr;
+
+  /* Separación entre columnas/filas */
+  gap: 16px;
+}
+
+.rejilla-2-1 {
+  /* Activamos Grid */
+  display: grid;
+
+  /* Dos columnas (la izquierda dos veces más ancha) */
+  grid-template-columns: 2fr 1fr;
+
+  /* Separación entre elementos de la rejilla */
+  gap: 16px;
+}
+
+
+/* ======================================
+   RESPONSIVE (APILAR EN PANTALLAS ESTRECHAS)
+   Objetivo:
+   - Cuando el ancho de la pantalla sea ≤ 900px,
+     la rejilla de 3 columnas pasa a 1 columna.
+   Ventaja:
+   - No tienes que cambiar el HTML: la rejilla se adapta sola.
+   - Mejora la legibilidad en móvil y tablet en vertical.
+   ====================================== */
+
+@media (max-width: 900px) {
+  .rejilla-3 {
+    /* De 3 columnas → 1 columna */
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Responsive: apilar en pantalles estretes */
+@media (max-width: 900px) {
+
+  .rejilla-2,
+  .rejilla-2-1 {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* ======================================
+   PATRÓN DE USO RESUMIDO (para recordar)
+   --------------------------------------
+   <section class="seccion [seccion--suave]">
+     <div class="contenedor">
+       <h2 class="seccion__titulo">Título</h2>
+
+       <!-- Elige una rejilla según lo que necesites -->
+       <div class="rejilla-1">
+         <!-- elementos apilados -->
+       </div>
+
+       <div class="rejilla-3">
+         <!-- 3 columnas en escritorio, 1 en móvil -->
+       </div>
+     </div>
+   </section>
+   ====================================== */

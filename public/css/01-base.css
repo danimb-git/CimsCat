@@ -1,0 +1,165 @@
+/* =========================
+   01-BASE — FUNDAMENTOS
+   Qué define este archivo:
+   1) Un reset corto para empezar “limpio”.
+   2) Tokens (variables CSS) de color y medidas para reutilizar.
+   3) Tipografía y estilos base de la página.
+   4) Utilidades simples (contenedor, centrado, oculto).
+   -------------------------
+   CONSEJO:
+   - Si aparece un color nuevo en el proyecto, añádelo aquí como variable.
+   - No pongas componentes ni rejillas en este archivo.
+   ========================= */
+
+
+/* ======================================
+   RESET CORTO
+   - Asegura un comportamiento predecible entre navegadores.
+   - “box-sizing: border-box” evita cálculos raros de ancho/alto.
+   - Las imágenes nunca se desbordan y mantienen proporción.
+   - Los inputs y botones heredan la fuente del documento.
+   ====================================== */
+
+*,
+*::before,
+*::after {
+    /* Caja de contenido más intuitiva */
+    box-sizing: border-box;
+}
+
+html,
+body {
+    /* Eliminamos márgenes/padding por defecto */
+    margin: 0;
+    padding: 0;
+}
+
+img {
+    /* Imágenes fluidas: no salen del contenedor y guardan proporción */
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+
+button,
+input {
+    /* Los controles usan la misma tipografía que el body */
+    font: inherit;
+}
+
+
+/* ======================================
+   TOKENS (VARIABLES CSS)
+   - Colores y medidas reusables en todo el proyecto.
+   - Cambia aquí un valor y se actualiza en todas las hojas.
+   Nomenclatura:
+   --color-*     → colores globales
+   --radio       → radio estándar de bordes
+   --sombra      → sombra suave estándar
+   ====================================== */
+
+:root {
+    /* Paleta principal del sitio */
+    --color-fondo: #f8f6f2;
+    /* beige claro (fondo general) */
+    --color-texto: #2b2b2b;
+    /* texto principal */
+    --color-texto-suave: #5b5b5b;
+    /* texto secundario */
+    --color-titulo: #2f2520;
+    /* color para títulos/secciones */
+    --color-marca: #6e4b3a;
+    /* marrón principal (botones, barra) */
+    --color-marca-tinta: #f8f6f2;
+    /* texto sobre color marca (alto contraste) */
+    --color-linea: #e9e3da;
+    /* líneas/bordes suaves */
+    --color-pie: #1b1512;
+    /* marrón muy oscuro (footer) */
+
+    /* Bordes y sombras reutilizables */
+    --radio: 12px;
+    --sombra: 0 4px 16px rgba(0, 0, 0, .08);
+}
+
+
+/* ======================================
+   TIPOGRAFÍA Y ESTILOS BASE
+   - Ajustes globales de fuente, colores y legibilidad.
+   - Los márgenes de títulos se normalizan para consistencia.
+   - Enlaces con color de marca y subrayado al pasar.
+   ====================================== */
+
+body {
+    /* Colores globales del sitio */
+    background: var(--color-fondo);
+    color: var(--color-texto);
+
+    /* Fuente del sistema: rápida y consistente por plataforma */
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+
+    /* Legibilidad de párrafos */
+    line-height: 1.6;
+}
+
+h1,
+h2,
+h3 {
+    /* Separación inferior homogénea y line-height más compacto */
+    margin: 0 0 1rem;
+    line-height: 1.2;
+}
+
+a {
+    /* Enlaces con color de marca y sin subrayado por defecto */
+    color: var(--color-marca);
+    text-decoration: none;
+}
+
+a:hover {
+    /* Feedback visual al pasar el ratón */
+    text-decoration: underline;
+}
+
+
+/* ======================================
+   UTILIDADES (CLASES DE AYUDA)
+   - Pequeñas clases para tareas frecuentes.
+   - Úsalas cuando no tenga sentido crear un componente.
+   ====================================== */
+
+.contenedor {
+    /* Ancho fluido: 90% del viewport hasta 1200px, centrado */
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.texto-centrado {
+    /* Centrar texto rápidamente */
+    text-align: center;
+}
+
+.oculto {
+    /* Ocultar un elemento (útil para estados o ayudas visuales) */
+    display: none !important;
+}
+
+
+/* ======================================
+   RECORDATORIO RÁPIDO DE USO
+   --------------------------------------
+   <section class="seccion">
+     <div class="contenedor">
+       <h2 class="seccion__titulo">Título</h2>
+       <p>Contenido…</p>
+     </div>
+   </section>
+
+   - Si necesitas un color nuevo, define:
+     :root { --color-nuevo: #xxxxxx; }
+     y úsalo: color: var(--color-nuevo);
+
+   - No declares aquí estilos de componentes (botones, tarjetas, etc.):
+     van en 03-componentes.css
+   ====================================== */
