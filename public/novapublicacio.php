@@ -1,3 +1,5 @@
+<?php session_start(); if (empty($_SESSION['user_id'])) { header('Location: /register.php?e=login'); exit; } ?>
+
 <!DOCTYPE html>
 <html lang="ca">
 
@@ -19,7 +21,7 @@
             </h1>
 
             <div class="login__card">
-                <form action="publicacio.html" method="get" class="login__form" enctype="multipart/form-data"
+                <form action="/process_novapublicacio.php" method="post" class="login__form" enctype="multipart/form-data"
                     novalidate>
                     <!-- Títol -->
                     <div class="login__grupo">
@@ -45,7 +47,7 @@
                     <!-- Alçada (m) -->
                     <div class="login__grupo">
                         <label for="alcada" class="login__label">Alçada (m) *</label>
-                        <input type="number" id="alcada" name="alcada" class="login__input" min="0" max="6000" step="1"
+                        <input type="number" id="alcada" name="alcada" class="login__input" min="1" max="6000" step="1"
                             required />
                     </div>
 
