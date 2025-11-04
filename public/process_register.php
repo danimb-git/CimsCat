@@ -18,9 +18,10 @@ if ($nom_usuari==='' || $nom==='' || $cognom==='' || !filter_var($mail, FILTER_V
   redirect('/register.php?e=validacio');
 }
 
+
 // 3) Insert usuari
 try {
-  $pdo = Database::getConnection();
+  $pdo = (new Database())->getConnection();
   // comprovar si ja existeix el correu
   $st = $pdo->prepare("SELECT 1 FROM usuari WHERE mail=?");
   $st->execute([$mail]);

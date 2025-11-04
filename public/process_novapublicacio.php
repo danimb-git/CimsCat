@@ -54,7 +54,7 @@ $imatges = $paths ? implode(',', $paths) : null;
 
 // 4) Inserció directa a EXCURSIO (sense taula CIM)
 try {
-  $pdo = Database::getConnection();
+  $pdo = (new Database())->getConnection();
 
   // Nota: si la columna distancia és INT a la BD, forcem enter:
   $dist = (int)floor((float)$distancia);
