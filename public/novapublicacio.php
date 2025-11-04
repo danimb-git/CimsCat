@@ -21,7 +21,7 @@
             </h1>
 
             <div class="login__card">
-                <form action="publicacio.html" method="get" class="login__form" enctype="multipart/form-data"
+                <form action="/process_novapublicacio.php" method="post" class="login__form" enctype="multipart/form-data"
                     novalidate>
                     <!-- Títol -->
                     <div class="login__grupo">
