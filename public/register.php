@@ -16,10 +16,10 @@
             <h1 class="seccion__titulo login__titulo">Crear un nou compte</h1>
 
             <div class="login__card">
-                <form action="perfil.html" method="get" class="login__form" novalidate>
+                <form action="/process_register.php" method="post" class="login__form" novalidate>
                     <div class="login__grupo">
-                        <label for="nomUsuari" class="login__label">Nom d'usuari</label>
-                        <input type="text" id="nomUsuari" name="nomUsuari" class="login__input" autocomplete="username"
+                        <label for="nom_usuari" class="login__label">Nom d'usuari</label>
+                        <input type="text" id="nom_usuari" name="nom_usuari" class="login__input" autocomplete="username"
                             required />
                     </div>
 
@@ -34,8 +34,8 @@
                     </div>
 
                     <div class="login__grupo">
-                        <label for="correu" class="login__label">Correu electrònic</label>
-                        <input type="email" id="correu" name="correu" class="login__input" required />
+                        <label for="mail" class="login__label">Correu electrònic</label>
+                        <input type="email" id="mail" name="mail" class="login__input" required />
                     </div>
 
                     <div class="login__grupo">
@@ -44,8 +44,8 @@
                     </div>
 
                     <div class="login__grupo">
-                        <label for="contrasenya" class="login__label">Repeteix la contrasenya</label>
-                        <input type="password" id="contrasenya" name="contrasenya" class="login__input" required />
+                        <label for="contrasenya2" class="login__label">Repeteix la contrasenya</label>
+                        <input type="password" id="contrasenya2" name="contrasenya2" class="login__input" required />
                     </div>
 
                     <div class="login__acciones">
