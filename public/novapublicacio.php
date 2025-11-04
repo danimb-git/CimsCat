@@ -47,7 +47,7 @@
                     <!-- Alçada (m) -->
                     <div class="login__grupo">
                         <label for="alcada" class="login__label">Alçada (m) *</label>
-                        <input type="number" id="alcada" name="alcada" class="login__input" min="0" max="6000" step="1"
+                        <input type="number" id="alcada" name="alcada" class="login__input" min="1" max="6000" step="1"
                             required />
                     </div>
 
