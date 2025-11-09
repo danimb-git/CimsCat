@@ -1,4 +1,9 @@
-<?php session_start(); if (empty($_SESSION['user_id'])) { header('Location: /register.php?e=login'); exit; } ?>
+<?php
+session_start();
+if (empty($_SESSION['user_id'])) {
+  header('Location: /login.php?e=required'); exit;
+}
+?>
 
 <!DOCTYPE html>
 <html lang="ca">
@@ -80,7 +85,7 @@
                     <!-- Distància (km) -->
                     <div class="login__grupo">
                         <label for="distancia" class="login__label">Distància (km) *</label>
-                        <input type="number" id="distancia" name="distancia" class="login__input" min="0" step="0.1"
+                        <input type="number" id="distancia" name="distancia" class="login__input" min="0" step="1"
                             required />
                     </div>
 
@@ -94,7 +99,7 @@
                     <!-- Data de la publicació / de l'excursió -->
                     <div class="login__grupo">
                         <label for="data_publicacio" class="login__label">Data *</label>
-                        <input type="date" id="data_publicacio" name="data_publicacio" class="login__input" required />
+                        <input type="date" id="data_publicacio" name="data" class="login__input" required />
                     </div>
 
                     <!-- Imatges -->
@@ -103,9 +108,6 @@
                         <input type="file" id="imatges" name="imatges[]" class="login__input" accept=".jpg,.jpeg,.png"
                             multiple />
                     </div>
-
-                    <!-- ID usuari (omplir al servidor) -->
-                    <input type="hidden" id="usuari_id" name="usuari_id" value="<?= $_SESSION['user_id'] ?? '' ?>" />
 
                     <!-- Accions -->
                     <div class="login__acciones">
