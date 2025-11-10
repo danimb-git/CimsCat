@@ -76,7 +76,7 @@ $imatges = $paths ? implode(',', $paths) : null;
 
 /* === 4) Inserció a EXCURSIO (sense taula CIM) === */
 try {
-  $pdo = Database::getConnection();
+  $pdo = (new Database())->getConnection();
 
   $dist = (int)$distancia; // BD: INT
 

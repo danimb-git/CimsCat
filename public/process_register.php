@@ -24,7 +24,7 @@ if (!filter_var($mail, FILTER_VALIDATE_EMAIL)) {
 
 // 2) Conexión PDO
 require_once __DIR__ . '/../src/config/Database.php';
-$pdo = Database::getConnection();
+$pdo = (new Database())->getConnection();
 
 // 3) Comprobar que nom_usuari o mail no existen (UNIQUE en BD)
 $st = $pdo->prepare('SELECT id FROM usuari WHERE nom_usuari = ? OR mail = ? LIMIT 1');

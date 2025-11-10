@@ -10,7 +10,7 @@ if ($identifier === '' || $password === '') {
 
 // 2) Conexión PDO
 require_once __DIR__ . '/../src/config/Database.php';
-$pdo = Database::getConnection();
+$pdo = (new Database())->getConnection();
 
 // 3) Buscar por nombre de usuario o mail
 $sql = "SELECT id, nom_usuari, contrasenya, rol
