@@ -1,9 +1,8 @@
 <?php
 session_start();
-if (empty($_SESSION['user_id'])) { header('Location: /register.php?e=login'); exit; }
+if (empty($_SESSION['user_id'])) { header('Location: /login.php?e=required'); exit; }
 
-require __DIR__ . '/../src/config/Database.php';
-
+require_once __DIR__ . '/../src/config/Database.php';
 function redirect($to){ header("Location: $to"); exit; }
 
 $uid = (int)$_SESSION['user_id'];
@@ -11,7 +10,7 @@ $uid = (int)$_SESSION['user_id'];
 /* === 1) Inputs === */
 $titol      = trim($_POST['titol'] ?? '');
 $descripcio = trim($_POST['descripcio'] ?? '');
-$data       = $_POST['data_publicacio'] ?? '';
+$data       = $_POST['data'] ?? '';            // <-- nombre alineado con el form
 $temps      = $_POST['temps_ruta'] ?? '';
 $dificultat = $_POST['dificultat'] ?? '';
 $distancia  = $_POST['distancia'] ?? '';
@@ -38,21 +37,39 @@ if ($errors) { redirect('/novapublicacio.php?e=' . implode(',', $errors)); }
 $paths = [];
 if (!empty($_FILES['imatges']['name'][0])) {
   if (count($_FILES['imatges']['name']) > 5) redirect('/novapublicacio.php?e=toomany');
-  $uploadDir = __DIR__ . '/uploads';
+
+  $uploadDir = __DIR__ . '/uploads'; // /public/uploads
   if (!is_dir($uploadDir)) mkdir($uploadDir, 0775, true);
 
+  // Límite de tamaño (ej. 5MB por imagen)
+  $maxSize = 5 * 1024 * 1024;
+  $allowed = ['image/jpeg' => 'jpg', 'image/png' => 'png'];
+
   for ($i=0; $i<count($_FILES['imatges']['name']); $i++) {
-    $tmp = $_FILES['imatges']['tmp_name'][$i];
-    if (!is_uploaded_file($tmp)) continue;
-    $mime = mime_content_type($tmp);
-    if (!in_array($mime, ['image/jpeg','image/png'], true)) redirect('/novapublicacio.php?e=img');
+    if ($_FILES['imatges']['error'][$i] === UPLOAD_ERR_NO_FILE) continue;
+    if ($_FILES['imatges']['error'][$i] !== UPLOAD_ERR_OK) redirect('/novapublicacio.php?e=upload');
 
-    $ext  = pathinfo($_FILES['imatges']['name'][$i], PATHINFO_EXTENSION);
-    $name = uniqid('img_', true).".".$ext;
+    $tmp  = $_FILES['imatges']['tmp_name'][$i];
+    $size = (int)$_FILES['imatges']['size'][$i];
+    if ($size <= 0 || $size > $maxSize) redirect('/novapublicacio.php?e=imgsize');
+
+    // MIME real -> extensión segura
+    $finfo = @finfo_open(FILEINFO_MIME_TYPE);
+    $mime  = $finfo ? finfo_file($finfo, $tmp) : mime_content_type($tmp);
+    if ($finfo) finfo_close($finfo);
+
+    if (!isset($allowed[$mime])) redirect('/novapublicacio.php?e=imgtype');
+
+    $ext  = $allowed[$mime];
+    $name = uniqid('img_', true) . '.' . $ext;
     $dest = $uploadDir . '/' . $name;
-    if (!move_uploaded_file($tmp, $dest)) redirect('/novapublicacio.php?e=upload');
 
-    $paths[] = 'uploads/' . $name; // ruta pública
+    if (!is_uploaded_file($tmp) || !move_uploaded_file($tmp, $dest)) {
+      redirect('/novapublicacio.php?e=upload');
+    }
+
+    // ruta pública relativa
+    $paths[] = 'uploads/' . $name;
   }
 }
 $imatges = $paths ? implode(',', $paths) : null;
@@ -61,8 +78,7 @@ $imatges = $paths ? implode(',', $paths) : null;
 try {
   $pdo = (new Database())->getConnection();
 
-  // si a la BD 'distancia' és INT, fem cast segur:
-  $dist = (int)floor((float)$distancia);
+  $dist = (int)$distancia; // BD: INT
 
   $sql = "INSERT INTO excursio
             (titol, descripcio, data, temps_ruta, dificultat, imatges, distancia,
@@ -75,9 +91,18 @@ try {
     $nom_cim, $alcada, $comarca, $uid
   ]);
 
-  redirect('/publicacio.html?s=publicada');
+  // === REDIRECCIÓN A LA FICHA ===
+  $id = (int)$pdo->lastInsertId();
+  if ($id > 0) {
+    header('Location: /publicacio.php?id=' . $id);
+    exit;
+  }
+
+  // Fallback si no se obtuvo el ID (muy raro)
+  redirect('/perfil.php?ok=created');
+
 } catch (Throwable $e) {
-  // Debug opcional temporal:
-  // ini_set('display_errors',1); error_reporting(E_ALL); die($e->getMessage());
+  // Log opcional: error_log($e->getMessage());
   redirect('/novapublicacio.php?e=bd');
 }
+?>

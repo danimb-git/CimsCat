@@ -1,3 +1,12 @@
+<?php
+session_start();
+if (empty($_SESSION['user_id'])) { header('Location: /login.php?e=required'); exit; }
+if (($_SESSION['rol'] ?? '') !== 'administrador') {
+  // puedes redirigir al perfil normal o mostrar un 403
+  header('Location: /perfil.php'); exit;
+}
+?>
+
 <!DOCTYPE html>
 <html lang="ca">
 
@@ -34,54 +43,54 @@
                     <table class="tabla">
                         <tr>
                             <td> 
-                                <a href="publicacio.html">Pica d'Estats - Dàlia Jordan</a> 
+                                <a href="publicacio.php">Pica d'Estats - Dàlia Jordan</a> 
                             </td>
                             <td class="tabla__derecha">
-                                <a class=" boton boton--marca" href="novapublicacio.html">Editar</a>
+                                <a class=" boton boton--marca" href="novapublicacio.php">Editar</a>
                                 <a class="boton boton--contraste" href="">Eliminar</a>
                             </td>
                         <tr>
                             <td> 
-                                <a href="publicacio.html">Pica d'Estats - Dàlia Jordan</a> 
+                                <a href="publicacio.php">Pica d'Estats - Dàlia Jordan</a> 
                             </td>
                             <td class="tabla__derecha">
-                                <a class=" boton boton--marca" href="novapublicacio.html">Editar</a>
-                                <a class="boton boton--contraste" href="">Eliminar</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td> 
-                                <a href="publicacio.html">Pica d'Estats - Dàlia Jordan</a> 
-                            </td>
-                            <td class="tabla__derecha">
-                                <a class=" boton boton--marca" href="novapublicacio.html">Editar</a>
+                                <a class=" boton boton--marca" href="novapublicacio.php">Editar</a>
                                 <a class="boton boton--contraste" href="">Eliminar</a>
                             </td>
                         </tr>
                         <tr>
                             <td> 
-                                <a href="publicacio.html">Pica d'Estats - Dàlia Jordan</a> 
+                                <a href="publicacio.php">Pica d'Estats - Dàlia Jordan</a> 
                             </td>
                             <td class="tabla__derecha">
-                                <a class=" boton boton--marca" href="novapublicacio.html">Editar</a>
+                                <a class=" boton boton--marca" href="novapublicacio.php">Editar</a>
                                 <a class="boton boton--contraste" href="">Eliminar</a>
                             </td>
                         </tr>
                         <tr>
                             <td> 
-                                <a href="publicacio.html">Pica d'Estats - Dàlia Jordan</a> 
+                                <a href="publicacio.php">Pica d'Estats - Dàlia Jordan</a> 
                             </td>
                             <td class="tabla__derecha">
-                                <a class=" boton boton--marca" href="novapublicacio.html">Editar</a>
+                                <a class=" boton boton--marca" href="novapublicacio.php">Editar</a>
                                 <a class="boton boton--contraste" href="">Eliminar</a>
                             </td>
                         </tr>
                         <tr>
                             <td> 
-                                <a href="publicacio.html">Pica d'Estats - Dàlia Jordan</a> 
+                                <a href="publicacio.php">Pica d'Estats - Dàlia Jordan</a> 
                             </td>
                             <td class="tabla__derecha">
-                                <a class=" boton boton--marca" href="novapublicacio.html">Editar</a>
+                                <a class=" boton boton--marca" href="novapublicacio.php">Editar</a>
+                                <a class="boton boton--contraste" href="">Eliminar</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td> 
+                                <a href="publicacio.php">Pica d'Estats - Dàlia Jordan</a> 
+                            </td>
+                            <td class="tabla__derecha">
+                                <a class=" boton boton--marca" href="novapublicacio.php">Editar</a>
                                 <a class="boton boton--contraste" href="">Eliminar</a>
                             </td>
                         </tr>
@@ -91,12 +100,12 @@
 
                 <aside class="perfil__lateral">
                     <div class="perfil__lateral_superior">
-                        <a class="boton boton--contraste" href="editperfil.html">Editar perfil</a>
-                        <a class="boton boton--marca" href="novapublicacio.html">Nova publicació</a>
+                        <a class="boton boton--contraste" href="editperfil.php">Editar perfil</a>
+                        <a class="boton boton--marca" href="novapublicacio.php">Nova publicació</a>
                     </div>
 
                     <div class="perfil__lateral_inferior">
-                        <a class="boton boton--marca" href="index.html">Log Out</a>
+                        <a class="boton boton--marca" href="logout.php">Log Out</a>
                     </div>
                 </aside>
 

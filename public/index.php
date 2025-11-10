@@ -1,3 +1,4 @@
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="ca">
 
@@ -25,8 +26,15 @@
         <input class="entrada" type="search" placeholder="Buscar...">
         <button class="boton">Buscar</button>
       </div>
-      <a class="boton" href="login.html">Iniciar sesión</a>
-      <a class="boton oculto" href="perfil.html">Perfil</a>
+      <?php if (isset($_SESSION['user_id'])): ?>
+        <?php if (($_SESSION['rol'] ?? '') === 'administrador'): ?>
+          <a class="boton" href="perfiladministrador.php">Perfil</a>
+        <?php else: ?>
+          <a class="boton" href="perfil.php">Perfil</a>
+        <?php endif; ?>
+      <?php else: ?>
+        <a class="boton" href="login.php">Iniciar sesión</a>
+      <?php endif; ?>
     </div>
   </div>
 

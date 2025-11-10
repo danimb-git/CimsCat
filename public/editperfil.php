@@ -1,3 +1,5 @@
+<?php session_start(); if (empty($_SESSION['user_id'])) { header('Location: /login.php?e=required'); exit; } ?>
+
 <!DOCTYPE html>
 <html lang="ca">
 <head>

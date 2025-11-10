@@ -1,3 +1,10 @@
+<?php
+// public/publicacio.php
+// No requerim login; només llegim l'ID si arriba per GET.
+session_start();
+$pubId = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+// Nota: De moment no fem servir $pubId. Es queda per quan vulguis fer-ho dinàmic.
+?>
 <!DOCTYPE html>
 <html lang="ca">
   <head>
@@ -10,7 +17,8 @@
     <link rel="stylesheet" href="css/04-paginas.css" />
   </head>
 
-  <body>
+  <!-- Deixem guardat l'ID per si el vols fer servir en JS més endavant -->
+  <body data-publicacio-id="<?= htmlspecialchars((string)$pubId) ?>">
     <header class="perfil__banner">
       <div class="contenedor">
         <div class="rejilla-2-1">
@@ -18,7 +26,8 @@
             <h1 class="seccion__titulo inicio-destacados__titulo">
               Pica d'Estats per cara nord
             </h1>
-            <a href="perfil.html" class="publicacion__autor">Per Dàlia Jordan</a>
+            <!-- Enllaç actualitzat a .php; el contingut segueix sent inventat -->
+            <a href="perfil.php" class="publicacion__autor">Per Dàlia Jordan</a>
           </div>
           <div class="publicacion__like">
             <button class="boton-corazon" aria-label="Afegir als preferits">
@@ -28,10 +37,12 @@
         </div>
       </div>
     </header>
+
     <section class="seccion seccion--suave">
       <div class="contenedor">
         <p><strong>· Alçada: 3.133 m</strong></p>
         <p><strong>· Comarca: Pallars Sobirà</strong></p>
+
         <div class="seccion">
           <p>
             Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nihil
@@ -68,6 +79,7 @@
             necessitatibus!
           </p>
         </div>
+
         <div class="seccion">
           <img
             class="publicacion__imagen"
@@ -75,6 +87,7 @@
             alt="Imatge de Montserrat"
           />
         </div>
+
         <div class="seccion">
           <h2>Fitxa tècnica:</h2>
           <ul>
@@ -85,6 +98,7 @@
             <li>Data: 12/12/2025</li>
           </ul>
         </div>
+
         <div class="seccion">
           <div class="comentaris">
             <h2>Comentaris</h2>
@@ -100,7 +114,6 @@
               <button type="submit">Enviar comentari</button>
             </form>
 
-            <!-- Exemple de comentaris publicats -->
             <div class="llista-comentaris">
               <div class="comentari">
                 <div>
@@ -126,6 +139,7 @@
             </div>
           </div>
         </div>
+
       </div>
     </section>
 
@@ -138,5 +152,12 @@
         </nav>
       </div>
     </footer>
+
+    <!-- (Opcional) Si algun dia vols fer servir l'ID des de JS:
+    <script>
+      const pubId = document.body.dataset.publicacioId;
+      // console.log('Publicació ID:', pubId);
+    </script>
+    -->
   </body>
 </html>

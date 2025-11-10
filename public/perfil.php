@@ -1,3 +1,10 @@
+<?php
+session_start();
+if (empty($_SESSION['user_id'])) {
+  header('Location: /login.php?e=required'); exit;
+}
+?>
+
 <!DOCTYPE html>
 <html lang="ca">
 
@@ -44,7 +51,7 @@
                             <p class="tarjeta__texto">Descobreix els millors camins per gaudir de la muntanya de
                                 Montserrat.
                             </p>
-                            <a class="tarjeta__cta" href="publicacio.html">Llegir més</a>
+                            <a class="tarjeta__cta" href="publicacio.php">Llegir més</a>
                         </article>
                         <article class="tarjeta">
                             <img class="tarjeta__imagen" src="./img/cadiretes.jpg" alt="Imatge de Cadiretes">
@@ -55,19 +62,19 @@
                             <p class="tarjeta__texto">Descobreix els millors camins per gaudir de la muntanya de
                                 Cadiretes.
                             </p>
-                            <a class="tarjeta__cta" href="publicacio.html">Llegir més</a>
+                            <a class="tarjeta__cta" href="publicacio.php">Llegir més</a>
                         </article>
                     </div>
                 </div>
 
                 <aside class="perfil__lateral">
                     <div class="perfil__lateral_superior">
-                        <a class="boton boton--contraste" href="editperfil.html">Editar perfil</a>
-                        <a class="boton boton--marca" href="novapublicacio.html">Nova publicació</a>
+                        <a class="boton boton--contraste" href="editperfil.php">Editar perfil</a>
+                        <a class="boton boton--marca" href="novapublicacio.php">Nova publicació</a>
                     </div>
 
                     <div class="perfil__lateral_inferior">
-                        <a class="boton boton--marca" href="index.html">Log Out</a>
+                        <a class="boton boton--marca" href="logout.php">Log Out</a>
                     </div>
                 </aside>
 
