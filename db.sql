@@ -65,14 +65,6 @@ CREATE TABLE IF NOT EXISTS `like` (
     FOREIGN KEY (id_usuari) REFERENCES usuari(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-/*
--- Dades de prova
+-- CREEM UN PERFIL D'ADMINISTRADOR
 INSERT INTO usuari (nom_usuari, nom, cognom, mail, contrasenya, edat, rol) VALUES
-('admin', 'Admin', 'Sistema', 'admin@cimscat.cat', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 30, 'administrador'),
-('dalia', 'Dàlia', 'Jordan Millán', 'dalia@cimscat.cat', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 28, 'usuari');
-
-INSERT INTO cim (nom, alcada, comarca) VALUES
-('Pica d''Estats', 3143, 'Pallars Sobirà'),
-('Pedraforca', 2506, 'Berguedà'),
-('La Mola', 1104, 'Vallès Occidental');
-*/
+('admin', 'Admin', 'Sistema', 'admin@cimscat.cat', '12345678', 30, 'administrador'),
