@@ -1,6 +1,8 @@
 <?php
 session_start();
-if (empty($_SESSION['user_id'])) { header('Location: /login.php?e=required'); exit; }
+if (empty($_SESSION['user_id'])) {
+  header('Location: /login.php?e=required'); exit;
+}
 
 require_once __DIR__ . '/../src/config/Database.php';
 function redirect($to){ header("Location: $to"); exit; }
