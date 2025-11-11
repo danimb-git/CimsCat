@@ -345,3 +345,59 @@
 .publicacion__like .boton-corazon {
     font-size: 2rem;
 }
+
+
+/* ======================
+   ESTILS ADDICIONALS PER INDEX
+   ====================== */
+
+/* Botó de like desactivat per usuaris no logejats */
+.boton-corazon--disabled {
+    cursor: pointer;
+    opacity: 0.7;
+    text-decoration: none;
+    color: #666;
+}
+
+.boton-corazon--disabled:hover {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+/* Assegurar que el cor i el comptador estan junts */
+.boton-corazon, .boton-corazon--disabled {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+/* ======================
+   CORS VERMELLS AL PERFIL
+   ====================== */
+
+
+/* Cercle marró amb cor vermell dins */
+.like-badge {
+    background-color: #806c5c;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.like-badge .boton-corazon {
+    color: #e74c3c !important;
+    font-size: 1.5rem;
+    padding: 0;
+}
+
+.like-badge .like-count {
+    color: white;
+    font-weight: bold;
+}

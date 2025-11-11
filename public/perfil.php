@@ -54,6 +54,13 @@ $stmt = $pdo->prepare($sqlMine);
 $stmt->execute([$_SESSION['user_id']]);
 $meves = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+// Funció per comprovar si l'usuari actual ha fet like a una excursió
+function usuariHaFetLike($pdo, $id_excursio, $id_usuari) {
+    $stmt = $pdo->prepare("SELECT COUNT(*) FROM `like` WHERE id_excursio = ? AND id_usuari = ?");
+    $stmt->execute([$id_excursio, $id_usuari]);
+    return $stmt->fetchColumn() > 0;
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -67,6 +74,7 @@ $meves = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <link rel="stylesheet" href="css/02-layout.css" />
     <link rel="stylesheet" href="css/03-componentes.css" />
     <link rel="stylesheet" href="css/04-paginas.css" />
+    <link rel="stylesheet" href="css/likes-comentaris.css" />
     <style>
         .rejilla-2.inicio-destacados__rejilla {
             display: grid;
@@ -133,9 +141,12 @@ $meves = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                         <img class="tarjeta__imagen" src="<?= $imgSrc ?>" alt="Imatge de <?= $titol ?>">
                                         <div class="tarjeta__encabezado">
                                             <h3 class="tarjeta__titulo"><?= $titol ?></h3>
-                                            <button class="boton-corazon activo"
+                                            <?php $haLike = usuariHaFetLike($pdo, $idExc, $_SESSION['user_id']); ?>
+                                            <button class="boton-corazon <?= $haLike ? 'activo' : '' ?>"
                                                 data-excursio-id="<?= $idExc ?>"
-                                                aria-label="Eliminar dels preferits">♥ <span class="like-count">0</span></button>
+                                                aria-label="<?= $haLike ? 'Eliminar dels preferits' : 'Afegir als preferits' ?>">
+                                                ♥ <span class="like-count">0</span>
+                                            </button>
                                         </div>
                                         <p class="tarjeta__texto"><?= $nomCim ?><?= ($nomCim && $dif) ? ' · ' : '' ?><?= $dif ?></p>
                                         <a class="tarjeta__cta" href="publicacio.php?id=<?= $idExc ?>">Llegir més</a>
@@ -169,9 +180,12 @@ $meves = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                         <img class="tarjeta__imagen" src="<?= $imgSrc ?>" alt="Imatge de <?= $titol ?>">
                                         <div class="tarjeta__encabezado">
                                             <h3 class="tarjeta__titulo"><?= $titol ?></h3>
-                                            <button class="boton-corazon"
+                                            <?php $haLike = usuariHaFetLike($pdo, $idExc, $_SESSION['user_id']); ?>
+                                            <button class="boton-corazon <?= $haLike ? 'activo' : '' ?>"
                                                 data-excursio-id="<?= $idExc ?>"
-                                                aria-label="Afegir o treure de preferits">♥ <span class="like-count">0</span></button>
+                                                aria-label="<?= $haLike ? 'Eliminar dels preferits' : 'Afegir als preferits' ?>">
+                                                ♥ <span class="like-count">0</span>
+                                            </button>
                                         </div>
                                         <p class="tarjeta__texto"><?= $nomCim ?><?= ($nomCim && $dif) ? ' · ' : '' ?><?= $dif ?></p>
                                         <a class="tarjeta__cta" href="publicacio.php?id=<?= $idExc ?>">Veure publicació</a>
