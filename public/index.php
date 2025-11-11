@@ -87,12 +87,7 @@ $usar_estatiques = empty($excursions_destacades);
       <h2 class="seccion__titulo inicio-destacados__titulo">
         <?php echo $usar_estatiques ? 'Excursions destacades' : 'Excursions més populars'; ?>
       </h2>
-      <?php if (!$usar_estatiques): ?>
-        <p style="text-align: center; color: #666; margin-top: -1rem; margin-bottom: 2rem;">
-          Les excursions amb més m'agrada de la comunitat
-        </p>
-      <?php endif; ?>
-
+      
       <div class="rejilla-3 inicio-destacados__rejilla">
 
         <?php if (!$usar_estatiques): ?>
