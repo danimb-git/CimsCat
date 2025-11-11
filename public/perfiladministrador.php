@@ -67,6 +67,10 @@ $excursions = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <div class="contenedor">
             <div class="rejilla-2-1">
                 <div class="perfil__saludo">
+                    <!-- 🔸 Nou botó per tornar a l'inici -->
+                    <a class="boton boton--marca" href="index.php" style="margin-bottom: 1rem; display: inline-block;">
+                    🏠 Tornar a l'inici
+                    </a>
                     <h1>Hola,<br><?= e($nomComplet) ?></h1>
                 </div>
                 <div class="perfil__avatar">
