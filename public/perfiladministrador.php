@@ -26,18 +26,27 @@ function autorFromRow(array $ex): string {
 
 $pdo = (new Database())->getConnection();
 
+$stmtUser = $pdo->prepare("SELECT nom, cognom, nom_usuari, foto FROM usuari WHERE id = :id");
+$stmtUser->execute([':id' => $_SESSION['user_id']]);
+$me = $stmtUser->fetch(PDO::FETCH_ASSOC) ?: [];
+
+$avatar = !empty($me['foto']) ? $me['foto'] : 'uploads/avatars/default.png';
+$nomComplet = trim(($me['nom'] ?? '') . ' ' . ($me['cognom'] ?? ''));
+if ($nomComplet === '') { $nomComplet = $me['nom_usuari'] ?? 'Usuari'; }
+
+// Carga excursiones
 $sql = "SELECT
           e.id, e.titol, e.descripcio, e.data, e.temps_ruta, e.dificultat, 
           e.imatges, e.distancia, e.id_cim, e.id_usuari, e.created_at,
           u.nom        AS autor_nom,
           u.cognom     AS autor_cognom,
-          u.nom_usuari AS autor_username
+          u.nom_usuari AS autor_username,
+          u.foto       AS autor_foto
         FROM excursio e
         LEFT JOIN usuari u ON u.id = e.id_usuari
         ORDER BY e.created_at DESC";
 $stmt = $pdo->query($sql);
 $excursions = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
 ?>
 
 <!DOCTYPE html>
@@ -58,10 +67,10 @@ $excursions = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <div class="contenedor">
             <div class="rejilla-2-1">
                 <div class="perfil__saludo">
-                    <h1>Hola,<br>Dàlia Jordan</h1>
+                    <h1>Hola,<br><?= e($nomComplet) ?></h1>
                 </div>
                 <div class="perfil__avatar">
-                    <img src="./img/avatar.jpg" alt="Avatar d'usuari">
+                    <img src="<?= e($avatar) ?>" alt="Avatar d'usuari">
                 </div>
             </div>
         </div>
@@ -73,6 +82,23 @@ $excursions = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <div class="rejilla-2-1">
                 <div>
                     <h2 class="seccion__titulo">Gestionar publicacions</h2>
+                    
+                    <?php
+                    $ok = $_GET['ok'] ?? '';
+                    $e  = $_GET['e']  ?? '';
+                    if ($ok === 'deleted') {
+                    echo '<div class="alerta alerta--ok">Publicació eliminada correctament.</div>';
+                    } elseif ($e === 'notfound') {
+                    echo '<div class="alerta alerta--warn">Aquesta publicació no existeix o ja s\'ha eliminat.</div>';
+                    } elseif ($e === 'id') {
+                    echo '<div class="alerta alerta--error">Identificador invàlid.</div>';
+                    } elseif ($e === 'db') {
+                    echo '<div class="alerta alerta--error">No s\'ha pogut eliminar per un error de base de dades.</div>';
+                    } elseif ($e === 'method') {
+                    echo '<div class="alerta alerta--warn">Operació no permesa (només POST).</div>';
+                    }
+                    ?>
+
                     <?php if (empty($excursions)): ?>
                         <div class="empty">No hi ha cap excursió registrada.</div>
                     <?php else: ?>
