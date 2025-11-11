@@ -35,10 +35,6 @@ $_SESSION['nom']    = $user['nom'];
 $_SESSION['cognom'] = $user['cognom'];
 $_SESSION['foto']   = $user['foto'];
 
-// 6) Redirección según rol
-if ($user['rol'] === 'administrador') {
-  header('Location: /perfiladministrador.php');
-} else {
-  header('Location: /perfil.php');
-}
+
+header('Location: /perfil.php');
 exit;

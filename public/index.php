@@ -75,11 +75,7 @@ $usar_estatiques = empty($excursions_destacades);
         <button class="boton">Buscar</button>
       </div>
       <?php if (isset($_SESSION['user_id'])): ?>
-        <?php if (($_SESSION['rol'] ?? '') === 'administrador'): ?>
-          <a class="boton" href="perfiladministrador.php">Perfil</a>
-        <?php else: ?>
-          <a class="boton" href="perfil.php">Perfil</a>
-        <?php endif; ?>
+        <a class="boton" href="perfil.php">Perfil</a>
       <?php else: ?>
         <a class="boton" href="login.php">Iniciar sesión</a>
       <?php endif; ?>
