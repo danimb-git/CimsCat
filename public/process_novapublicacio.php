@@ -20,6 +20,11 @@ $distancia  = $_POST['distancia'] ?? '';
 $nom_cim = trim($_POST['nom_cim'] ?? '');
 $alcada  = (int)($_POST['alcada'] ?? 0);
 $comarca = trim($_POST['comarca'] ?? '');
+/*
+echo "<pre>";
+var_dump($_POST);
+echo "</pre>";*/
+//die();
 
 /* === 2) Validació bàsica === */
 $errors = [];
@@ -104,7 +109,10 @@ try {
   redirect('/perfil.php?ok=created');
 
 } catch (Throwable $e) {
-  // Log opcional: error_log($e->getMessage());
+  // Log opcional: 
+  error_log($e->getMessage());
+  print_r($e);
+  die();
   redirect('/novapublicacio.php?e=bd');
 }
 ?>
