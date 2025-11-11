@@ -1,0 +1,347 @@
+/* ======================
+   ESTILS PER LIKES
+   ====================== */
+
+/* Botó de like (cor) */
+.boton-corazon {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #666;
+    padding: 0.5rem;
+}
+
+.boton-corazon:hover {
+    transform: scale(1.2);
+    color: #e74c3c;
+}
+
+/* Quan el like està actiu */
+.boton-corazon.activo {
+    color: #e74c3c;
+    animation: heartbeat 0.3s ease;
+}
+
+/* Animació del cor */
+@keyframes heartbeat {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.3);
+    }
+}
+
+/* Comptador de likes */
+.like-count {
+    display: inline-block;
+    margin-left: 0.25rem;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+/* Contenidor de like dins la targeta */
+.tarjeta__encabezado {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+/* ======================
+   ESTILS PER COMENTARIS
+   ====================== */
+
+/* Secció de comentaris */
+.seccio-comentaris {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+}
+
+.seccio-comentaris__titol {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: #333;
+}
+
+/* Formulari per afegir comentari */
+.form-comentari {
+    margin-bottom: 2rem;
+}
+
+.form-comentari__textarea {
+    width: 100%;
+    min-height: 100px;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 1rem;
+    resize: vertical;
+    margin-bottom: 0.5rem;
+}
+
+.form-comentari__textarea:focus {
+    outline: none;
+    border-color: #806c5c;
+    box-shadow: 0 0 0 2px rgba(128, 108, 92, 0.1);
+}
+
+.form-comentari__info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.form-comentari__contador {
+    font-size: 0.875rem;
+    color: #666;
+}
+
+.form-comentari__contador.limit {
+    color: #e74c3c;
+    font-weight: bold;
+}
+
+.form-comentari__boton {
+    padding: 0.75rem 1.5rem;
+    background-color: #806c5c;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.form-comentari__boton:hover {
+    background-color: #6d5d4f;
+}
+
+.form-comentari__boton:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+/* Llista de comentaris */
+.comentaris-llista {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* Comentari individual */
+.comentari {
+    background-color: white;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    transition: box-shadow 0.3s ease;
+}
+
+.comentari:hover {
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+.comentari__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.comentari__autor {
+    font-weight: 600;
+    color: #333;
+}
+
+.comentari__data {
+    font-size: 0.875rem;
+    color: #999;
+}
+
+.comentari__contingut {
+    margin: 0.5rem 0;
+    line-height: 1.6;
+    color: #555;
+}
+
+.comentari__accions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+}
+
+/* Botons petits (per accions de comentaris) */
+.boton-petit {
+    padding: 0.25rem 0.75rem;
+    font-size: 0.875rem;
+    border: 1px solid #ddd;
+    background-color: white;
+    color: #555;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.boton-petit:hover {
+    background-color: #f5f5f5;
+    border-color: #999;
+}
+
+.boton-petit.boton-perill {
+    color: #e74c3c;
+    border-color: #e74c3c;
+}
+
+.boton-petit.boton-perill:hover {
+    background-color: #e74c3c;
+    color: white;
+}
+
+/* Missatge quan no hi ha comentaris */
+.sin-comentarios {
+    text-align: center;
+    padding: 2rem;
+    color: #999;
+    font-style: italic;
+}
+
+/* Missatges d'error */
+.error {
+    color: #e74c3c;
+    padding: 1rem;
+    background-color: #fee;
+    border-left: 3px solid #e74c3c;
+    border-radius: 4px;
+}
+
+/* ======================
+   NOTIFICACIONS
+   ====================== */
+
+.notificacio {
+    position: fixed;
+    top: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 1rem 2rem;
+    border-radius: 4px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    z-index: 9999;
+    transition: top 0.3s ease;
+    font-weight: 500;
+}
+
+.notificacio.mostrar {
+    top: 20px;
+}
+
+.notificacio--success {
+    background-color: #806c5c;
+    color: white;
+}
+
+.notificacio--error {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.notificacio--info {
+    background-color: #3498db;
+    color: white;
+}
+
+/* ======================
+   RESPONSIVE
+   ====================== */
+
+@media (max-width: 768px) {
+    .seccio-comentaris {
+        padding: 1rem;
+    }
+
+    .comentari {
+        padding: 0.75rem;
+    }
+
+    .comentari__header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.25rem;
+    }
+
+    .form-comentari__info {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .boton-corazon {
+        font-size: 1.25rem;
+    }
+}
+
+/* ======================
+   ESTATS DE CÀRREGA
+   ====================== */
+
+.carregant {
+    text-align: center;
+    padding: 2rem;
+    color: #999;
+}
+
+.carregant::after {
+    content: '...';
+    animation: dots 1.5s steps(4, end) infinite;
+}
+
+@keyframes dots {
+    0%, 20% {
+        content: '.';
+    }
+    40% {
+        content: '..';
+    }
+    60%, 100% {
+        content: '...';
+    }
+}
+
+/* ======================
+   MILLORES D'ACCESSIBILITAT
+   ====================== */
+
+.boton-corazon:focus,
+.boton-petit:focus,
+.form-comentari__boton:focus {
+    outline: 2px solid #806c5c;
+    outline-offset: 2px;
+}
+
+/* Mostrar focus només amb teclat, no amb ratolí */
+.boton-corazon:focus:not(:focus-visible),
+.boton-petit:focus:not(:focus-visible),
+.form-comentari__boton:focus:not(:focus-visible) {
+    outline: none;
+}
+
+/* ======================
+   ESTILS ESPECÍFICS PER PUBLICACIÓ
+   ====================== */
+
+.publicacion__like {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.publicacion__like .boton-corazon {
+    font-size: 2rem;
+}

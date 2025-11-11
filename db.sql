@@ -68,3 +68,5 @@ CREATE TABLE IF NOT EXISTS `like` (
 -- CREEM UN PERFIL D'ADMINISTRADOR
 INSERT INTO usuari (nom_usuari, nom, cognom, mail, contrasenya, edat, rol) VALUES
 ('admin', 'Admin', 'Sistema', 'admin@cimscat.cat', '12345678', 30, 'administrador'),
+
+
