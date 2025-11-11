@@ -47,8 +47,10 @@ if (empty($errorMsg)) {
     $sql = "
       SELECT 
         e.*, 
+        c.nom AS nom_cim, c.alcada, c.comarca,
         u.nom_usuari AS autor_username, u.nom AS autor_nom, u.cognom AS autor_cognom
       FROM excursio e
+      LEFT JOIN cim c ON c.id = e.id_cim
       LEFT JOIN usuari u ON u.id = e.id_usuari
       WHERE e.id = :id
       LIMIT 1
@@ -97,6 +99,7 @@ $imgSrc = $img ? 'uploads/'.basename($img) : 'img/placeholder.jpg';
     <link rel="stylesheet" href="css/02-layout.css" />
     <link rel="stylesheet" href="css/03-componentes.css" />
     <link rel="stylesheet" href="css/04-paginas.css" />
+    <link rel="stylesheet" href="css/likes-comentaris.css" />
   </head>
 
   <body data-publicacio-id="<?= e((string)$pubId) ?>">
@@ -116,7 +119,12 @@ $imgSrc = $img ? 'uploads/'.basename($img) : 'img/placeholder.jpg';
             ?>
           </div>
           <div class="publicacion__like">
-            <button class="boton-corazon" aria-label="Afegir als preferits">♥</button>
+            <button class="boton-corazon" 
+                    data-excursio-id="<?= $pubId ?>"
+                    aria-label="Afegir als preferits">
+                ♥
+                <span class="like-count">0</span>
+            </button>
           </div>
         </div>
       </div>
@@ -155,26 +163,44 @@ $imgSrc = $img ? 'uploads/'.basename($img) : 'img/placeholder.jpg';
             </ul>
           </div>
 
-          <!-- Comentaris: placeholder fins que ho connectis -->
+          <!-- SECCIÓ DE COMENTARIS -->
           <div class="seccion">
             <div class="comentaris">
               <h2>Comentaris</h2>
-              <form action="#" method="post">
-                <label for="comentari">Deixa el teu comentari:</label>
-                <textarea id="comentari" name="comentari" rows="2" placeholder="Escriu aquí..." required></textarea>
-                <button type="submit">Enviar comentari</button>
-              </form>
-
-              <div class="llista-comentaris">
-                <div class="comentari">
-                  <div>
-                    <span class="comentari__autor"><?= e($autorNomComplet) ?></span>
-                    <span class="comentari__data">· <?= e(formatDate($pub['data'] ?? '')) ?></span>
+              
+              <?php if (isset($_SESSION['user_id'])): ?>
+                <!-- Formulari per afegir comentari -->
+                <form class="form-comentari" id="form-comentari" data-excursio-id="<?= $pubId ?>">
+                  <label for="comentari">Deixa el teu comentari:</label>
+                  <textarea 
+                      class="form-comentari__textarea" 
+                      id="comentari"
+                      name="contingut" 
+                      rows="4"
+                      placeholder="Escriu el teu comentari... (mínim 3 caràcters, màxim 200)"
+                      maxlength="200"
+                      required></textarea>
+                  
+                  <div class="form-comentari__info">
+                      <span class="form-comentari__contador">
+                          <span id="char-count">0</span>/200 caràcters
+                      </span>
+                      <button type="submit" class="form-comentari__boton">
+                          Publicar comentari
+                      </button>
                   </div>
-                  <p class="comentari__text">
-                    Gran sortida! 👌 (Aquesta secció la connectarem a la BD més endavant.)
-                  </p>
-                </div>
+                </form>
+              <?php else: ?>
+                <p style="padding: 1rem; background: #fff3cd; border-left: 3px solid #806c5c; border-radius: 4px;">
+                    Has d'<a href="login.php" style="color: #806c5c; font-weight: bold;">iniciar sessió</a> per comentar.
+                </p>
+              <?php endif; ?>
+
+              <!-- Llista de comentaris (es carregarà amb JavaScript) -->
+              <div id="comentaris-container" 
+                   class="comentaris-llista llista-comentaris" 
+                   data-excursio-id="<?= $pubId ?>">
+                  <p class="carregant">Carregant comentaris...</p>
               </div>
             </div>
           </div>
@@ -193,5 +219,27 @@ $imgSrc = $img ? 'uploads/'.basename($img) : 'img/placeholder.jpg';
         </nav>
       </div>
     </footer>
+
+    <!-- SCRIPTS PER LIKES I COMENTARIS -->
+    <script>
+        <?php if (isset($_SESSION['user_id'])): ?>
+            window.USER_ID = <?php echo $_SESSION['user_id']; ?>;
+            window.USER_ROL = '<?php echo $_SESSION['rol'] ?? 'usuari'; ?>';
+        <?php endif; ?>
+
+        // Comptador de caràcters
+        const textarea = document.querySelector('textarea[name="contingut"]');
+        if (textarea) {
+            textarea.addEventListener('input', function() {
+                const count = this.value.length;
+                const counter = document.getElementById('char-count');
+                if (counter) {
+                    counter.textContent = count;
+                    counter.parentElement.classList.toggle('limit', count > 180);
+                }
+            });
+        }
+    </script>
+    <script src="js/likes-comentaris.js"></script>
   </body>
 </html>
