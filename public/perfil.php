@@ -15,8 +15,45 @@ if (!$user) {
     exit;
 }
 
+
 $avatar = !empty($user['foto']) ? $user['foto'] : 'uploads/avatars/default.png';
 $nomComplet = trim(($user['nom'] ?? '') . ' ' . ($user['cognom'] ?? ''));
+
+// (a) PUBLICACIONS GUARDADES PER LIKE ── recórrer la taula `like` filtrant per l'usuari loguejat
+$sqlLikes = "
+  SELECT 
+      e.id          AS id_excursio,
+      e.titol,
+      e.imatges,
+      e.dificultat,
+      COALESCE(c.nom, e.cim_nom) AS nom_cim   -- si heu 'desacoblat' el cim, agafem e.cim_nom
+  FROM `like` l
+  JOIN excursio e       ON e.id = l.id_excursio
+  LEFT JOIN cim c       ON c.id = e.id_cim
+  WHERE l.id_usuari = ?
+  ORDER BY l.created_at DESC
+";
+$stmt = $pdo->prepare($sqlLikes);
+$stmt->execute([$_SESSION['user_id']]);
+$guardades = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// (b) PUBLICACIONS CREADES PER L’USUARI ── recórrer la taula `excursio` filtrant per propietari
+$sqlMine = "
+  SELECT
+      e.id          AS id_excursio,
+      e.titol,
+      e.imatges,
+      e.dificultat,
+      COALESCE(c.nom, e.cim_nom) AS nom_cim
+  FROM excursio e
+  LEFT JOIN cim c ON c.id = e.id_cim
+  WHERE e.id_usuari = ?
+  ORDER BY e.created_at DESC
+";
+$stmt = $pdo->prepare($sqlMine);
+$stmt->execute([$_SESSION['user_id']]);
+$meves = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 ?>
 
 <!DOCTYPE html>
@@ -30,6 +67,19 @@ $nomComplet = trim(($user['nom'] ?? '') . ' ' . ($user['cognom'] ?? ''));
     <link rel="stylesheet" href="css/02-layout.css" />
     <link rel="stylesheet" href="css/03-componentes.css" />
     <link rel="stylesheet" href="css/04-paginas.css" />
+    <style>
+        .rejilla-2.inicio-destacados__rejilla {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 1rem;
+        }
+
+        @media (max-width: 800px) {
+            .rejilla-2.inicio-destacados__rejilla {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -37,8 +87,14 @@ $nomComplet = trim(($user['nom'] ?? '') . ' ' . ($user['cognom'] ?? ''));
   <div class="contenedor">
     <div class="rejilla-2-1">
       <div class="perfil__saludo">
+        <!-- 🔸 Nou botó per tornar a l'inici -->
+        <a class="boton boton--marca" href="index.php" style="margin-bottom: 1rem; display: inline-block;">
+          🏠 Tornar a l'inici
+        </a>
+
         <h1>Hola,<br><?= htmlspecialchars($nomComplet) ?></h1>
       </div>
+
       <div class="perfil__avatar">
         <img class="perfil__avatar" src="/<?= htmlspecialchars($avatar) ?>" alt="Foto de perfil">
       </div>
@@ -47,43 +103,94 @@ $nomComplet = trim(($user['nom'] ?? '') . ' ' . ($user['cognom'] ?? ''));
 </header>
 
 
-
-
-
     <section class="seccion seccion--suave">
         <div class="contenedor">
             <div class="rejilla-2-1">
-                <div>
+
+                <!-- 🔹 COLUMNA ESQUERRA -->
+                <div class="perfil__col-izq">
+
+                    <!-- Excursions guardades -->
                     <h2 class="seccion__titulo">Excursions guardades</h2>
 
-                    <div class="rejilla-2 inicio-destacados__rejilla">
-                        <article class="tarjeta">
-                            <img class="tarjeta__imagen" src="./img/montserrat.jpg" alt="Imatge de Montserrat">
-                            <div class="tarjeta__encabezado">
-                                <h3 class="tarjeta__titulo">Excursió a Montserrat</h3>
-                                <button class="boton-corazon" aria-label="Afegir als preferits">♥</button>
+                    <?php if (empty($guardades)): ?>
+                        <p class="muted">Encara no has guardat cap excursió. Ves a les publicacions i prem el cor per desar-les aquí.</p>
+                    <?php else: ?>
+                        <div class="carousel" data-section="guardades">
+                            <button class="carousel__btn prev" aria-label="Anterior">‹</button>
+                            <div class="carousel__track">
+                                <?php foreach ($guardades as $row):
+                                    $titol  = htmlspecialchars($row['titol'] ?? '—', ENT_QUOTES, 'UTF-8');
+                                    $nomCim = htmlspecialchars($row['nom_cim'] ?? '', ENT_QUOTES, 'UTF-8');
+                                    $map    = ['facil' => 'Fàcil', 'mig' => 'Mitjana', 'dificil' => 'Difícil'];
+                                    $dif    = $map[$row['dificultat'] ?? ''] ?? '';
+                                    $idExc  = (int)$row['id_excursio'];
+                                    $img = trim((string)($row['imatges'] ?? ''));
+                                    if ($img === '') $imgSrc = 'img/placeholder.jpg';
+                                    else $imgSrc = (str_starts_with($img, 'uploads/')) ? $img : ('uploads/' . htmlspecialchars($img, ENT_QUOTES, 'UTF-8'));
+                                ?>
+                                    <article class="tarjeta carousel__item">
+                                        <img class="tarjeta__imagen" src="<?= $imgSrc ?>" alt="Imatge de <?= $titol ?>">
+                                        <div class="tarjeta__encabezado">
+                                            <h3 class="tarjeta__titulo"><?= $titol ?></h3>
+                                            <button class="boton-corazon activo"
+                                                data-excursio-id="<?= $idExc ?>"
+                                                aria-label="Eliminar dels preferits">♥ <span class="like-count">0</span></button>
+                                        </div>
+                                        <p class="tarjeta__texto"><?= $nomCim ?><?= ($nomCim && $dif) ? ' · ' : '' ?><?= $dif ?></p>
+                                        <a class="tarjeta__cta" href="publicacio.php?id=<?= $idExc ?>">Llegir més</a>
+                                    </article>
+                                <?php endforeach; ?>
                             </div>
-                            <p class="tarjeta__texto">Descobreix els millors camins per gaudir de la muntanya de
-                                Montserrat.
-                            </p>
-                            <a class="tarjeta__cta" href="publicacio.php">Llegir més</a>
-                        </article>
-                        <article class="tarjeta">
-                            <img class="tarjeta__imagen" src="./img/cadiretes.jpg" alt="Imatge de Cadiretes">
-                            <div class="tarjeta__encabezado">
-                                <h3 class="tarjeta__titulo">Excursió a Cadiretes</h3>
-                                <button class="boton-corazon" aria-label="Afegir als preferits">♥</button>
-                            </div>
-                            <p class="tarjeta__texto">Descobreix els millors camins per gaudir de la muntanya de
-                                Cadiretes.
-                            </p>
-                            <a class="tarjeta__cta" href="publicacio.php">Llegir més</a>
-                        </article>
-                    </div>
-                </div>
+                            <button class="carousel__btn next" aria-label="Següent">›</button>
+                        </div>
+                    <?php endif; ?>
 
+                    <!-- Les meves publicacions -->
+                    <h2 class="seccion__titulo" style="margin-top:2rem">Les meves publicacions</h2>
+
+                    <?php if (empty($meves)): ?>
+                        <p class="muted">Encara no has creat cap publicació. Crea’n una des de “Nova publicació”.</p>
+                    <?php else: ?>
+                        <div class="carousel" data-section="meves">
+                            <button class="carousel__btn prev" aria-label="Anterior">‹</button>
+                            <div class="carousel__track">
+                                <?php foreach ($meves as $row):
+                                    $titol  = htmlspecialchars($row['titol'] ?? '—', ENT_QUOTES, 'UTF-8');
+                                    $nomCim = htmlspecialchars($row['nom_cim'] ?? '', ENT_QUOTES, 'UTF-8');
+                                    $map    = ['facil' => 'Fàcil', 'mig' => 'Mitjana', 'dificil' => 'Difícil'];
+                                    $dif    = $map[$row['dificultat'] ?? ''] ?? '';
+                                    $idExc  = (int)$row['id_excursio'];
+                                    $img = trim((string)($row['imatges'] ?? ''));
+                                    if ($img === '') $imgSrc = 'img/placeholder.jpg';
+                                    else $imgSrc = (str_starts_with($img, 'uploads/')) ? $img : ('uploads/' . htmlspecialchars($img, ENT_QUOTES, 'UTF-8'));
+                                ?>
+                                    <article class="tarjeta carousel__item">
+                                        <img class="tarjeta__imagen" src="<?= $imgSrc ?>" alt="Imatge de <?= $titol ?>">
+                                        <div class="tarjeta__encabezado">
+                                            <h3 class="tarjeta__titulo"><?= $titol ?></h3>
+                                            <button class="boton-corazon"
+                                                data-excursio-id="<?= $idExc ?>"
+                                                aria-label="Afegir o treure de preferits">♥ <span class="like-count">0</span></button>
+                                        </div>
+                                        <p class="tarjeta__texto"><?= $nomCim ?><?= ($nomCim && $dif) ? ' · ' : '' ?><?= $dif ?></p>
+                                        <a class="tarjeta__cta" href="publicacio.php?id=<?= $idExc ?>">Veure publicació</a>
+                                    </article>
+                                <?php endforeach; ?>
+                            </div>
+                            <button class="carousel__btn next" aria-label="Següent">›</button>
+                        </div>
+                    <?php endif; ?>
+
+                </div><!-- /.perfil__col-izq -->
+
+                <!-- 🔹 COLUMNA DRETA -->
                 <aside class="perfil__lateral">
                     <div class="perfil__lateral_superior">
+                        <?php if (!empty($_SESSION['rol']) && $_SESSION['rol'] === 'administrador'): ?>
+                            <a class="boton boton--marca" href="perfiladministrador.php">Panell de control</a>
+                        <?php endif; ?>
+
                         <a class="boton boton--contraste" href="editperfil.php">Editar perfil</a>
                         <a class="boton boton--marca" href="novapublicacio.php">Nova publicació</a>
                     </div>
@@ -97,7 +204,6 @@ $nomComplet = trim(($user['nom'] ?? '') . ' ' . ($user['cognom'] ?? ''));
         </div>
     </section>
 
-
     <footer class="pie">
         <div class="contenedor pie__contenido">
             <small>© 2025 CIMSCAT</small>
@@ -108,6 +214,109 @@ $nomComplet = trim(($user['nom'] ?? '') . ' ' . ($user['cognom'] ?? ''));
         </div>
     </footer>
 
+    <!-- Variables globals per al JS de likes -->
+    <script>
+        <?php if (isset($_SESSION['user_id'])): ?>
+            window.USER_ID = <?= (int)$_SESSION['user_id'] ?>;
+            window.USER_ROL = '<?= htmlspecialchars($_SESSION['rol'] ?? 'usuari', ENT_QUOTES, 'UTF-8') ?>';
+        <?php endif; ?>
+    </script>
+
+    <script src="js/likes-comentaris.js"></script>
+
+    <!-- CSS compacte per targetes petites i carrousel -->
+    <style>
+        .carousel {
+            position: relative;
+            margin-block: 1rem 2rem;
+            overflow: hidden;
+        }
+
+        .carousel__track {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            transition: all .3s ease;
+        }
+
+        .carousel__item {
+            flex: 0 0 calc(33.33% - 1rem);
+            max-width: 320px;
+        }
+
+        @media (max-width: 900px) {
+            .carousel__item {
+                flex: 0 0 calc(50% - 1rem);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .carousel__item {
+                flex: 0 0 100%;
+            }
+        }
+
+        .carousel__btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            inline-size: 2rem;
+            block-size: 2rem;
+            border-radius: 50%;
+            border: 1px solid #795548;
+            background: #fff;
+            cursor: pointer;
+            font-size: 1.25rem;
+            font-weight: bold;
+            line-height: 2rem;
+            text-align: center;
+            z-index: 2;
+        }
+
+        .carousel__btn.prev {
+            left: .25rem;
+        }
+
+        .carousel__btn.next {
+            right: .25rem;
+        }
+    </style>
+
+    <!-- JS del carrousel amb paginació real (3 targetes per pàgina) -->
+    <script>
+        document.querySelectorAll('.carousel').forEach(carousel => {
+            const track = carousel.querySelector('.carousel__track');
+            const items = carousel.querySelectorAll('.carousel__item');
+            const prev = carousel.querySelector('.carousel__btn.prev');
+            const next = carousel.querySelector('.carousel__btn.next');
+
+            const itemsPerPage = 3;
+            let currentPage = 0;
+
+            function showPage(page) {
+                const totalPages = Math.ceil(items.length / itemsPerPage);
+                if (page < 0) page = 0;
+                if (page >= totalPages) page = totalPages - 1;
+                currentPage = page;
+
+                items.forEach((item, index) => {
+                    item.style.display = (index >= page * itemsPerPage && index < (page + 1) * itemsPerPage) ?
+                        "block" :
+                        "none";
+                });
+
+                prev.disabled = (currentPage === 0);
+                next.disabled = (currentPage === totalPages - 1);
+            }
+
+            prev.addEventListener("click", () => showPage(currentPage - 1));
+            next.addEventListener("click", () => showPage(currentPage + 1));
+
+            showPage(0);
+        });
+    </script>
 </body>
+
 
 </html>
