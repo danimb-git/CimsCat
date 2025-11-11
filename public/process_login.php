@@ -13,7 +13,7 @@ require_once __DIR__ . '/../src/config/Database.php';
 $pdo = (new Database())->getConnection();
 
 // 3) Buscar por nombre de usuario o mail
-$sql = "SELECT id, nom_usuari, contrasenya, rol
+$sql = "SELECT id, nom_usuari, nom, cognom, foto, contrasenya, rol
         FROM usuari
         WHERE nom_usuari = ? OR mail = ?
         LIMIT 1";
@@ -31,6 +31,9 @@ session_regenerate_id(true); // <— añadido: mitiga fijación de sesión
 $_SESSION['user_id']  = (int)$user['id'];
 $_SESSION['username'] = $user['nom_usuari'];
 $_SESSION['rol']      = $user['rol']; // 'usuari' o 'administrador'
+$_SESSION['nom']    = $user['nom'];
+$_SESSION['cognom'] = $user['cognom'];
+$_SESSION['foto']   = $user['foto'];
 
 // 6) Redirección según rol
 if ($user['rol'] === 'administrador') {

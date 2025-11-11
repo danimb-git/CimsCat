@@ -1,8 +1,22 @@
 <?php
 session_start();
 if (empty($_SESSION['user_id'])) {
-  header('Location: /login.php?e=required'); exit;
+    header('Location: /login.php?e=required');
+    exit;
 }
+require_once __DIR__ . '/../src/config/Database.php';
+$pdo = (new Database())->getConnection();
+
+$stmt = $pdo->prepare("SELECT nom, cognom, nom_usuari, mail, foto FROM usuari WHERE id = ?");
+$stmt->execute([$_SESSION['user_id']]);
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
+if (!$user) {
+    header('Location: /logout.php');
+    exit;
+}
+
+$avatar = !empty($user['foto']) ? $user['foto'] : 'uploads/avatars/default.png';
+$nomComplet = trim(($user['nom'] ?? '') . ' ' . ($user['cognom'] ?? ''));
 ?>
 
 <!DOCTYPE html>
@@ -20,19 +34,20 @@ if (empty($_SESSION['user_id'])) {
 
 <body>
     <header class="perfil__banner">
-        <div class="contenedor">
-            <div class="rejilla-2-1">
-                <div class="perfil__saludo">
-                    <h1>Hola,<br>Dàlia Jordan</h1>
-                </div>
-                <div class="perfil__avatar">
-                    <img src="./img/avatar.jpg" alt="Avatar d'usuari">
-                </div>
-            </div>
-        </div>
-    </header>
+  <div class="contenedor">
+    <div class="rejilla-2-1">
+      <div class="perfil__saludo">
+        <h1>Hola,<br><?= htmlspecialchars($nomComplet) ?></h1>
+      </div>
+      <div class="perfil__avatar">
+        <img class="perfil__avatar" src="/<?= htmlspecialchars($avatar) ?>" alt="Foto de perfil">
+      </div>
+    </div>
+  </div>
+</header>
 
-    
+
+
 
 
     <section class="seccion seccion--suave">

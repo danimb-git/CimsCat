@@ -21,6 +21,38 @@ if ($nom_usuari === '' || $nom === '' || $cognom === '' || $mail === '' || $pass
 if (!filter_var($mail, FILTER_VALIDATE_EMAIL)) {
   header('Location: /register.php?e=badmail'); exit;
 }
+$fotoPath = null;
+if (!empty($_FILES['foto']['name']) && $_FILES['foto']['error'] === UPLOAD_ERR_OK) {
+  $allowed = [
+    'image/jpeg' => 'jpg',
+    'image/png'  => 'png',
+    'image/webp' => 'webp'
+  ];
+
+  $tmp  = $_FILES['foto']['tmp_name'];
+  $mime = mime_content_type($tmp) ?: '';
+
+  if (!isset($allowed[$mime])) {
+    header('Location: /register.php?e=foto_tipo'); exit;
+  }
+  if ($_FILES['foto']['size'] > 2 * 1024 * 1024) { // 2MB
+    header('Location: /register.php?e=foto_mida'); exit;
+  }
+
+  $ext = $allowed[$mime];
+  $uploadDirFs = __DIR__ . '/uploads/avatars';
+  if (!is_dir($uploadDirFs)) { mkdir($uploadDirFs, 0777, true); }
+
+  $fileName = 'ava_' . bin2hex(random_bytes(8)) . '.' . $ext;
+  $destFs   = $uploadDirFs . '/' . $fileName;
+
+  if (!move_uploaded_file($tmp, $destFs)) {
+    header('Location: /register.php?e=foto_move'); exit;
+  }
+
+  // IMPORTANT: desarem el path RELATIU per al src del <img>
+  $fotoPath = 'uploads/avatars/' . $fileName;
+}
 
 // 2) Conexión PDO
 require_once __DIR__ . '/../src/config/Database.php';
@@ -36,8 +68,8 @@ if ($st->fetch()) {
 // 4) Hashear y guardar
 $hash = password_hash($password, PASSWORD_DEFAULT);
 
-$st = $pdo->prepare('INSERT INTO usuari (nom_usuari, nom, cognom, mail, contrasenya, edat, rol)
-                     VALUES (?, ?, ?, ?, ?, ?, ?)');
+$st = $pdo->prepare('INSERT INTO usuari (nom_usuari, nom, cognom, mail, contrasenya, edat, rol, foto)
+                     VALUES (?, ?, ?, ?, ?, ?, ?, ?)');
 $ok = $st->execute([
   $nom_usuari,
   $nom,
@@ -45,7 +77,8 @@ $ok = $st->execute([
   $mail,
   $hash,
   $edat !== '' ? (int)$edat : null,
-  $rol
+  $rol,
+  $fotoPath
 ]);
 
 if (!$ok) {
