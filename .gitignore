@@ -15,5 +15,9 @@ db_data/
 # Ignorar fitxers de l'editor (Visual Studio Code)
 .vscode/
 
-/public/uploads/
+# Ignorar imatges pujades pels usuaris
+public/uploads/*
+!public/uploads/.gitkeep
+public/uploads/avatars/*
+!public/uploads/avatars/.gitkeep
 

@@ -11,12 +11,20 @@ services:
       - ./public:/var/www/html
       - ./src:/var/www/src
       - ./logs:/var/log/apache2
+      - ./docker/php-custom.ini:/usr/local/etc/php/conf.d/uploads.ini
     depends_on:
       - db
     environment:
       - APACHE_DOCUMENT_ROOT=/var/www/html
     command: >
-      bash -c "docker-php-ext-install pdo pdo_mysql && a2enmod rewrite && apache2-foreground"
+      bash -c "
+      apt-get update && 
+      apt-get install -y libpng-dev libjpeg-dev libfreetype6-dev libwebp-dev zlib1g-dev &&
+      docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp &&
+      docker-php-ext-install pdo pdo_mysql gd && 
+      a2enmod rewrite && 
+      apache2-foreground
+      "
 
   # Base de dades MySQL
   db:
