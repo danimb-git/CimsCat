@@ -67,6 +67,22 @@ CREATE TABLE IF NOT EXISTS `like` (
 
 -- CREEM UN PERFIL D'ADMINISTRADOR
 INSERT INTO usuari (nom_usuari, nom, cognom, mail, contrasenya, edat, rol) VALUES
-('admin', 'Admin', 'Sistema', 'admin@cimscat.cat', '12345678', 30, 'administrador'),
+('admin', 'Admin', 'Sistema', 'admin@cimscat.cat', '12345678', 30, 'administrador');
 
 
+ALTER TABLE usuari ADD COLUMN foto VARCHAR(255) NULL AFTER cognom;
+UPDATE usuari SET foto = 'uploads/avatars/default.png' WHERE foto IS NULL;
+
+ALTER TABLE excursio
+  ADD COLUMN cim_nom     VARCHAR(200) AFTER distancia,
+  ADD COLUMN cim_alcada  INT          AFTER cim_nom,
+  ADD COLUMN cim_comarca VARCHAR(70)  AFTER cim_alcada;
+
+ALTER TABLE excursio DROP FOREIGN KEY excursio_ibfk_1;
+
+ALTER TABLE excursio MODIFY id_cim INT NULL;
+
+UPDATE excursio e
+JOIN cim c ON e.id_cim = c.id
+SET e.cim_nom = c.nom, e.cim_alcada = c.alcada, e.cim_comarca = c.comarca
+WHERE e.id_cim IS NOT NULL;
