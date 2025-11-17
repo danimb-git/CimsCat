@@ -35,6 +35,8 @@ if ($data) {
   $data = $dt ? $dt->format('Y-m-d') : null;
 }
 
+$pdo = (new Database())->getConnection();
+
 // 1) Obtenim les imatges actuals de la BD
 $cur = $pdo->prepare("SELECT imatges FROM excursio WHERE id = ?");
 $cur->execute([$id]);
