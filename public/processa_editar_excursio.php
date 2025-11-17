@@ -17,7 +17,7 @@ $alcada_in    = $_POST['alcada'] ?? null;
 $alcada       = is_numeric($alcada_in) ? (int)$alcada_in : null;
 $comarca      = clean($_POST['comarca'] ?? null);
 $dificultat   = clean($_POST['dificultat'] ?? null);
-$dist_in      = $_POST['distancia'] ?? null;             // BD: INT
+$dist_in      = $_POST['distancia'] ?? null;             
 $distancia    = is_numeric($dist_in) ? (int)$dist_in : null;
 $temps_ruta   = clean($_POST['temps_ruta'] ?? null);
 $data         = clean($_POST['data'] ?? null);
@@ -35,15 +35,78 @@ if ($data) {
   $data = $dt ? $dt->format('Y-m-d') : null;
 }
 
-// Obté imatges actuals per mantenir-les si no hi ha pujada nova
-$pdo = (new Database())->getConnection();
+// 1) Obtenim les imatges actuals de la BD
 $cur = $pdo->prepare("SELECT imatges FROM excursio WHERE id = ?");
 $cur->execute([$id]);
 $actual = $cur->fetch(PDO::FETCH_ASSOC);
-$imatges_actuals = $actual['imatges'] ?? null;
 
-// (Opcional) gestionar upload d'imatges aquí. Si no canvies, es manté el valor existent.
-$imatges = $imatges_actuals;
+$imatges_actuals_str = $actual['imatges'] ?? '';
+$llista_imatges = [];
+
+if ($imatges_actuals_str !== null && trim($imatges_actuals_str) !== '') {
+    $llista_imatges = array_filter(
+        array_map('trim', explode(',', $imatges_actuals_str))
+    );
+}
+
+// Ruta de la carpeta d'uploads
+$uploadDir = __DIR__ . '/uploads';
+
+// 2) Eliminar imatges marcades al formulari
+if (!empty($_POST['eliminar_imatges']) && is_array($_POST['eliminar_imatges'])) {
+    foreach ($_POST['eliminar_imatges'] as $nom) {
+        $nom = basename($nom); // seguretat
+        $idx = array_search($nom, $llista_imatges, true);
+        if ($idx !== false) {
+            unset($llista_imatges[$idx]);
+
+            $fitxer = $uploadDir . '/' . $nom;
+            if (is_file($fitxer)) {
+                @unlink($fitxer);
+            }
+        }
+    }
+}
+
+// 3) Processar noves imatges pujades (si n'hi ha)
+if (!empty($_FILES['imatges']) && is_array($_FILES['imatges']['name'])) {
+    // Ens assegurem que la carpeta existeix
+    if (!is_dir($uploadDir)) {
+        mkdir($uploadDir, 0775, true);
+    }
+
+    $totalFiles = count($_FILES['imatges']['name']);
+    for ($i = 0; $i < $totalFiles; $i++) {
+        if ($_FILES['imatges']['error'][$i] !== UPLOAD_ERR_OK) {
+            continue;
+        }
+
+        $tmpName  = $_FILES['imatges']['tmp_name'][$i];
+        $origName = $_FILES['imatges']['name'][$i];
+
+        if (!$tmpName || !is_uploaded_file($tmpName)) {
+            continue;
+        }
+
+        $ext = strtolower(pathinfo($origName, PATHINFO_EXTENSION));
+        if (!in_array($ext, ['jpg','jpeg','png'], true)) {
+            continue; // tipus no permès
+        }
+
+        $nouNom = uniqid('img_', true) . '.' . $ext;
+
+        if (move_uploaded_file($tmpName, $uploadDir . '/' . $nouNom)) {
+            $llista_imatges[] = $nouNom;
+        }
+    }
+}
+
+// 4) Tornem a muntar la cadena per guardar-la a la BD
+$llista_imatges = array_values(array_unique($llista_imatges));
+$imatges = null;
+if (!empty($llista_imatges)) {
+    $imatges = implode(',', $llista_imatges);
+}
 
 // UPDATE
 $sql = "UPDATE excursio

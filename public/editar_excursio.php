@@ -47,6 +47,11 @@ if (!empty($ex['temps_ruta'])) {
 
 $difs = ['facil'=>'Fàcil','mig'=>'Mig','dificil'=>'Difícil'];
 $imatges_actuals = trim((string)($ex['imatges'] ?? ''));
+$llista_imatges = [];
+if ($imatges_actuals !== '') {
+  $llista_imatges = array_filter(array_map('trim', explode(',', $imatges_actuals)));
+}
+
 
 // Prefill dels camps del cim
 $nom_cim = (string)($ex['cim_nom'] ?? '');
@@ -151,11 +156,42 @@ $comarca = (string)($ex['cim_comarca'] ?? '');
           <!-- Imatges -->
           <div class="login__grupo">
             <label for="imatges" class="login__label">Imatges (JPG/PNG, fins a 5)</label>
-            <input type="file" id="imatges" name="imatges[]" class="login__input" accept=".jpg,.jpeg,.png" multiple />
-            <?php if ($imatges_actuals !== ''): ?>
-              <small class="login__ayuda">Imatges actuals: <?= e($imatges_actuals) ?></small>
+            <input
+              type="file"
+              id="imatges"
+              name="imatges[]"
+              class="login__input"
+              accept=".jpg,.jpeg,.png"
+              multiple
+            />
+
+            <?php if (!empty($llista_imatges)): ?>
+              <p class="login__label" style="margin-top: 0.5rem;">Imatges actuals</p>
+              <ul class="imatges-actuals">
+                <?php foreach ($llista_imatges as $img): ?>
+                  <li class="imatges-actuals__item">
+                    <!-- Si vols, pots posar també una miniatura amb <img> -->
+                    <!-- <img src="/uploads/<?= e($img) ?>" alt="" style="max-width: 80px; display:block; margin-bottom:4px;"> -->
+                    <span><?= e($img) ?></span>
+                    <label style="margin-left: .5rem; font-size: .9rem;">
+                      <input
+                        type="checkbox"
+                        name="eliminar_imatges[]"
+                        value="<?= e($img) ?>"
+                      >
+                      Eliminar
+                    </label>
+                  </li>
+                <?php endforeach; ?>
+              </ul>
+              <small class="login__ayuda">
+                Si marques “Eliminar” i no puges cap imatge nova, la publicació es pot quedar sense fotos.
+              </small>
+            <?php else: ?>
+              <small class="login__ayuda">Ara mateix aquesta publicació no té cap imatge guardada.</small>
             <?php endif; ?>
           </div>
+
 
           <!-- Accions -->
           <div class="login__acciones">
